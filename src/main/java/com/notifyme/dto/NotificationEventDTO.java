@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NotificationEvent  implements Serializable  {
+public class NotificationEventDTO  implements Serializable  {
     private String recipientEmail;
     private String subject;
     private String message;
