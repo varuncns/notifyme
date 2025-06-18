@@ -11,6 +11,7 @@ target/
 .settings/
 .project
 .classpath
+src/main/resources/application-local.properties
 
 # IntelliJ
 .idea/
