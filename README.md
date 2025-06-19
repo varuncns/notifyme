@@ -46,6 +46,42 @@ NotifyMe is a modular notification service built using **Spring Boot**, **Rabbit
 
 ---
 
+## ⚡ Quick Start
+
+1. **Start dependencies**
+   ```bash
+   docker-compose up -d
+   ```
+2. **Build the project**
+   ```bash
+   ./mvnw clean package
+   ```
+3. **Run the application**
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+4. **Try the API**
+   ```bash
+   curl -X POST http://localhost:8081/api/notifications \
+     -H "Content-Type: application/json" \
+     -d '{"recipientEmail":"user@example.com","message":"Hello","type":"EMAIL"}'
+   ```
+
+5. **Run tests**
+   ```bash
+   ./mvnw test
+   ```
+
+---
+
+## 📡 API
+
+- **POST `/api/notifications`**
+  - Body: `NotificationEventDTO` JSON
+  - `type` can be `EMAIL` or `SMS`
+
+---
+
 ## 🧪 Sample Payload
 
 ```json
@@ -104,6 +140,8 @@ src/
 
 ## 🛠️ Environment Variables (`application-local.properties`)
 
+Create a file named `src/main/resources/application-local.properties` and add your credentials there. This file is ignored by Git.
+
 ```properties
 # DB
 spring.datasource.url=jdbc:postgresql://localhost:5432/notifyme
@@ -134,11 +172,18 @@ twilio.from.phone=+1xxxxxxxxxx
 
 ## 🐳 Docker Setup
 
-You can use Docker Compose to run:
-- PostgreSQL DB
-- RabbitMQ server
+This repository includes a `docker-compose.yml` to spin up the required services:
 
-(*Setup file not included yet — can be added in future milestones.*)
+- PostgreSQL database
+- RabbitMQ broker (with management UI)
+
+Run them with:
+
+```bash
+docker-compose up -d
+```
+
+The application will connect to these containers using the credentials defined in `application.properties`.
 
 ---
 
