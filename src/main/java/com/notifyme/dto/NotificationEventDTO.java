@@ -10,6 +10,7 @@ import lombok.*;
 @Builder
 public class NotificationEventDTO  implements Serializable  {
     private String recipientEmail;
+    private String phoneNumber;   
     private String subject;
     private String message;
     private String type; // e.g., "EMAIL" or "SMS" (used in future milestones)

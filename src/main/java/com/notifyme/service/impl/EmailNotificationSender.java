@@ -1,30 +1,32 @@
-package com.notifyme.service;
+package com.notifyme.service.impl;
 
 import com.notifyme.dto.NotificationEventDTO;
 import com.notifyme.entity.NotificationLog;
 import com.notifyme.repository.NotificationLogRepository;
+import com.notifyme.service.NotificationSender;
+
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.time.LocalDateTime;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
-public class EmailNotificationSender {
+public class EmailNotificationSender implements NotificationSender {
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
     private final NotificationLogRepository logRepository;
 
-    public void sendEmail(NotificationEventDTO event) {
-        // Build log entity
+    @Override
+    public void send(NotificationEventDTO event) {
         NotificationLog.NotificationLogBuilder logBuilder = NotificationLog.builder()
                 .recipientEmail(event.getRecipientEmail())
                 .subject(event.getSubject())
@@ -34,33 +36,31 @@ public class EmailNotificationSender {
                 .timestamp(LocalDateTime.now());
 
         try {
-            // Create HTML email
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-
             helper.setTo(event.getRecipientEmail());
             helper.setSubject(event.getSubject());
-            helper.setFrom("your_email@gmail.com"); // Replace with your sender address
+            helper.setFrom("your_email@gmail.com");
 
-            // Prepare Thymeleaf context
             Context context = new Context();
             context.setVariable("message", event.getMessage());
+            String html = templateEngine.process("email-template", context);
+            helper.setText(html, true);
 
-            String htmlContent = templateEngine.process("email-template", context);
-            helper.setText(htmlContent, true);
-
-            // Send email
             mailSender.send(mimeMessage);
             log.info("Email sent to {}", event.getRecipientEmail());
 
             logBuilder.status("SENT").error(null);
-
         } catch (Exception e) {
-            log.error("Failed to send email to {}: {}", event.getRecipientEmail(), e.getMessage());
+            log.error("Failed to send email: {}", e.getMessage());
             logBuilder.status("FAILED").error(e.getMessage());
         }
 
-        // Save notification log to PostgreSQL
         logRepository.save(logBuilder.build());
+    }
+
+    @Override
+    public String getType() {
+        return "EMAIL";
     }
 }
