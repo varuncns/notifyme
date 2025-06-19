@@ -21,6 +21,9 @@ public class NotificationSenderFactory {
         }
     }
     public NotificationSender getSender(String type) {
+        if (type == null) {
+            return null;
+        }
         return senderMap.get(type.toUpperCase());
     }
 }
