@@ -23,22 +23,23 @@ public class EmailNotificationSender implements NotificationSender {
 
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
-    private final NotificationLogRepository logRepository;
+
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
 
     @Override
     public void send(NotificationEventDTO event) {
-        NotificationLog.NotificationLogBuilder logBuilder = NotificationLog.builder()
-                .recipientEmail(event.getRecipientEmail())
-                .subject(event.getSubject())
-                .message(event.getMessage())
-                .type("EMAIL")
-                .retryCount(0)
-                .timestamp(LocalDateTime.now());
+        String email = event.getRecipientEmail();
+
+        // ✅ Format validation
+        if (email == null || !email.matches(EMAIL_REGEX)) {
+            log.warn("Invalid email format: {}", email);
+            throw new IllegalArgumentException("Invalid email: " + email);
+        }
 
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setTo(event.getRecipientEmail());
+            helper.setTo(email);
             helper.setSubject(event.getSubject());
             helper.setFrom("your_email@gmail.com");
 
@@ -48,15 +49,11 @@ public class EmailNotificationSender implements NotificationSender {
             helper.setText(html, true);
 
             mailSender.send(mimeMessage);
-            log.info("Email sent to {}", event.getRecipientEmail());
-
-            logBuilder.status("SENT").error(null);
+            log.info("Email sent to {}", email);
         } catch (Exception e) {
-            log.error("Failed to send email: {}", e.getMessage());
-            logBuilder.status("FAILED").error(e.getMessage());
+            log.error("Email sending failed: {}", e.getMessage());
+            throw new RuntimeException("Email sending failed", e);
         }
-
-        logRepository.save(logBuilder.build());
     }
 
     @Override

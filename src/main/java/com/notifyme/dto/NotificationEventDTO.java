@@ -14,4 +14,7 @@ public class NotificationEventDTO  implements Serializable  {
     private String subject;
     private String message;
     private String type; // e.g., "EMAIL" or "SMS" (used in future milestones)
+    
+    @Builder.Default
+    private int retryCount = 0;
 }

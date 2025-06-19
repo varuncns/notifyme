@@ -20,6 +20,10 @@ public class NotificationLog {
     private String recipientEmail;
     private String subject;
     
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    
     @Column(length = 5000)
     private String message;
 
@@ -27,7 +31,11 @@ public class NotificationLog {
     private String status;  // SENT, FAILED
     private String error;
 
+    @Column(name = "retry_count")
     private int retryCount;
+
+    @Column(name = "max_retry_reached")
+    private boolean maxRetryReached;
 
     private LocalDateTime timestamp;
 }
