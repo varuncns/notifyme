@@ -2,7 +2,8 @@ package com.notifyme.consumer;
 
 import com.notifyme.config.RabbitMQConfig;
 import com.notifyme.dto.NotificationEventDTO;
-import com.notifyme.service.EmailNotificationSender;
+import com.notifyme.service.NotificationSender;
+import com.notifyme.service.NotificationSenderFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -12,18 +13,18 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class NotificationConsumer {
-	
-	private final EmailNotificationSender emailSender;
 
-	
+    private final NotificationSenderFactory senderFactory;
+
     @RabbitListener(queues = RabbitMQConfig.NOTIFY_QUEUE)
     public void consume(NotificationEventDTO event) {
-        log.info("Received Notification Event: {}", event);
-        
-        if ("EMAIL".equalsIgnoreCase(event.getType())) {
-            emailSender.sendEmail(event);
+        log.info("📩 Received notification event: {}", event);
+
+        NotificationSender sender = senderFactory.getSender(event.getType());
+        if (sender != null) {
+            sender.send(event);
         } else {
-            log.warn(" Unsupported notification type: {}", event.getType());
+            log.warn(" No sender found for type: {}", event.getType());
         }
     }
 }
