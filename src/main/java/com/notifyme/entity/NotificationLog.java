@@ -35,7 +35,8 @@ public class NotificationLog {
     private int retryCount;
 
     @Column(name = "max_retry_reached")
-    private boolean maxRetryReached;
+    private Boolean maxRetryReached;
+
 
     private LocalDateTime timestamp;
 }
