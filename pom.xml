@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.6</version>
+		<version>3.2.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.notifyme</groupId>
@@ -56,6 +56,37 @@
 		    <artifactId>twilio</artifactId>
 		    <version>10.9.1</version>
 		</dependency>
+		
+        <!-- SpringDoc (Swagger UI) -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+		
+		<!-- Actuator -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+	
+		<!-- Micrometer for metrics -->
+		<dependency>
+		    <groupId>io.micrometer</groupId>
+		    <artifactId>micrometer-core</artifactId>
+		</dependency>
+		
+		<!-- Prometheus optional (for later cloud dashboards) -->
+		<dependency>
+		    <groupId>io.micrometer</groupId>
+		    <artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
+
 
 		
 		<dependency>
@@ -93,17 +124,21 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.11.0</version>
+            <configuration>
+                <source>21</source> 
+                <target>21</target>
+                <annotationProcessorPaths>
+                    <path>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok</artifactId>
+                        <version>1.18.30</version>
+                    </path>
+                </annotationProcessorPaths>
+            </configuration>
+        </plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
