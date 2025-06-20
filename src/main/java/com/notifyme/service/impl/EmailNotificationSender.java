@@ -30,7 +30,7 @@ public class EmailNotificationSender implements NotificationSender {
     public void send(NotificationEventDTO event) {
         String email = event.getRecipientEmail();
 
-        // ✅ Format validation
+        // Format validation
         if (email == null || !email.matches(EMAIL_REGEX)) {
             log.warn("Invalid email format: {}", email);
             throw new IllegalArgumentException("Invalid email: " + email);
