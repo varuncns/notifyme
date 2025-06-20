@@ -32,8 +32,11 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
                                     throws ServletException, IOException {
 
         String apiKey = request.getHeader(HEADER_NAME);
+        String path = request.getServletPath();
 
-        if (expectedApiKey.equals(apiKey)) {
+        System.out.println("API Key Filter applied to: " + path);
+
+        if (expectedApiKey != null && expectedApiKey.equals(apiKey)) {
             filterChain.doFilter(request, response);
         } else {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -49,7 +52,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        // Apply filter only to /api/notifications endpoint
-        return !request.getServletPath().equals("/api/notifications");
+        // Apply filter to all paths starting with /api/
+        return !request.getServletPath().startsWith("/api/");
     }
 }
