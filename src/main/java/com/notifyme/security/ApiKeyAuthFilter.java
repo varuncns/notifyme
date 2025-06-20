@@ -52,7 +52,11 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        // Apply filter to all paths starting with /api/
-        return !request.getServletPath().startsWith("/api/");
+        String path = request.getServletPath();
+
+        return path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/swagger-resources")||path.startsWith("/actuator");
     }
+
 }
