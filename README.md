@@ -7,7 +7,7 @@ NotifyMe is a modular notification service built using **Spring Boot**, **Rabbit
 ## 🚀 Features Implemented
 
 ### ✅ Milestone 1: Project Setup
-- Spring Boot 3.4.5 (Java 21)
+- Spring Boot 3.2.5 (Java 21)
 - Dockerized backend
 - PostgreSQL as persistence layer
 - RabbitMQ for message queue
@@ -44,6 +44,23 @@ NotifyMe is a modular notification service built using **Spring Boot**, **Rabbit
 - Logs each attempt to DB with accurate retry count
 - Invalid formats also result in `FAILED` log entries
 
+### ✅ Milestone 7: Validation & Error Handling
+- Bean validation on request DTOs (`@Valid`)
+- Global exception handler returning user friendly errors
+
+### ✅ Milestone 8: Security Layer
+- API key filter protecting all `/api/**` endpoints
+- Requests must include `x-api-key` header
+
+### ✅ Milestone 9: Admin Dashboard
+- `/api/dashboard/summary` returns counts for sent/failed notifications
+- `/api/dashboard/logs` paginated list with type/status filters
+- `/api/dashboard/export` download logs as CSV
+
+### ✅ Milestone 10: Observability & Docs
+- Swagger UI generated from OpenAPI at `/swagger-ui.html`
+- Spring Boot Actuator endpoints enabled under `/actuator`
+
 ---
 
 ## ⚡ Quick Start
@@ -64,6 +81,7 @@ NotifyMe is a modular notification service built using **Spring Boot**, **Rabbit
    ```bash
    curl -X POST http://localhost:8081/api/notifications \
      -H "Content-Type: application/json" \
+     -H "x-api-key: YOUR_KEY" \
      -d '{"recipientEmail":"user@example.com","message":"Hello","type":"EMAIL"}'
    ```
 
@@ -79,6 +97,13 @@ NotifyMe is a modular notification service built using **Spring Boot**, **Rabbit
 - **POST `/api/notifications`**
   - Body: `NotificationEventDTO` JSON
   - `type` can be `EMAIL` or `SMS`
+  - Requires `x-api-key` header
+
+- **GET `/api/dashboard/summary`** – overall stats
+- **GET `/api/dashboard/logs`** – paginated logs with optional `type` & `status`
+- **GET `/api/dashboard/export`** – download filtered logs as CSV
+
+Interactive documentation is available at `/swagger-ui.html`.
 
 ---
 
@@ -102,7 +127,7 @@ NotifyMe is a modular notification service built using **Spring Boot**, **Rabbit
 | Layer        | Tech                  |
 |--------------|----------------------|
 | Language     | Java 21              |
-| Framework    | Spring Boot 3.4.5    |
+| Framework    | Spring Boot 3.2.5    |
 | Messaging    | RabbitMQ             |
 | DB           | PostgreSQL           |
 | Email        | Spring Mail + Thymeleaf |
@@ -166,6 +191,9 @@ spring.mail.properties.mail.smtp.starttls.enable=true
 twilio.account.sid=ACxxxxxxxxxxxxxxxxxxxxx
 twilio.auth.token=your_token
 twilio.from.phone=+1xxxxxxxxxx
+
+# API key used by `ApiKeyAuthFilter`
+notifyme.api.key=CHANGEME
 ```
 
 ---
@@ -189,10 +217,9 @@ The application will connect to these containers using the credentials defined i
 
 ## 📈 Next Milestones
 
-- **Milestone 7:** Admin APIs to query logs & statistics
-- **Milestone 8:** UI dashboard (optional or via frontend integration)
-- **Milestone 9:** Scheduled notification support (delayed processing)
-- **Milestone 10:** Deployment + CI/CD (GCP or Railway)
+- Scheduled/delayed notification support
+- Frontend UI for the dashboard
+- CI/CD pipeline for automated deployment
 
 ---
 
