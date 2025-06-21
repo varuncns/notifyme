@@ -20,8 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequiredArgsConstructor
 public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
-    @Value("${notifyme.api.key}")
-    private String expectedApiKey;
+	@Value("${notifyme.api.key:default-key}")
+	private String expectedApiKey;
+
 
     private static final String HEADER_NAME = "x-api-key";
 
