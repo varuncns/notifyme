@@ -12,6 +12,7 @@ target/
 .project
 .classpath
 src/main/resources/application-local.properties
+src/main/resources/application-docker.properties
 
 # IntelliJ
 .idea/
