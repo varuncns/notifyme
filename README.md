@@ -61,23 +61,27 @@ NotifyMe is a modular notification service built using **Spring Boot**, **Rabbit
 - Swagger UI generated from OpenAPI at `/swagger-ui.html`
 - Spring Boot Actuator endpoints enabled under `/actuator`
 
+### ✅ Milestone 11: Dockerization
+- Dockerfile to package the NotifyMe service
+- Docker Compose orchestrates app, RabbitMQ and PostgreSQL
+
+### ✅ Milestone 12: Monitoring Dashboard
+- Prometheus scrapes `/actuator/prometheus`
+- Grafana container for visualizing metrics
+
 ---
 
 ## ⚡ Quick Start
 
-1. **Start dependencies**
-   ```bash
-   docker-compose up -d
-   ```
-2. **Build the project**
+1. **Build the project**
    ```bash
    ./mvnw clean package
    ```
-3. **Run the application**
+2. **Start the full stack**
    ```bash
-   ./mvnw spring-boot:run
+   docker-compose up -d --build
    ```
-4. **Try the API**
+3. **Try the API**
    ```bash
    curl -X POST http://localhost:8081/api/notifications \
      -H "Content-Type: application/json" \
@@ -85,7 +89,7 @@ NotifyMe is a modular notification service built using **Spring Boot**, **Rabbit
      -d '{"recipientEmail":"user@example.com","message":"Hello","type":"EMAIL"}'
    ```
 
-5. **Run tests**
+4. **Run tests**
    ```bash
    ./mvnw test
    ```
@@ -200,18 +204,20 @@ notifyme.api.key=CHANGEME
 
 ## 🐳 Docker Setup
 
-This repository includes a `docker-compose.yml` to spin up the required services:
+This repository includes a `docker-compose.yml` that starts the entire stack:
 
 - PostgreSQL database
 - RabbitMQ broker (with management UI)
+- NotifyMe service container
+- Prometheus and Grafana for metrics
 
-Run them with:
+Start everything with:
 
 ```bash
-docker-compose up -d
+docker-compose up -d --build
 ```
 
-The application will connect to these containers using the credentials defined in `application.properties`.
+The application image is built from the local sources and runs with the `docker` profile enabled.
 
 ---
 
