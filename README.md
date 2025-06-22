@@ -1,4 +1,8 @@
 # 📣 NotifyMe
+<!-- Logo -->
+<p align="center">
+  <img src="https://raw.githubusercontent.com/varuncns/varuncns/main/notifyme.png" alt="Logo" width="120" />
+</p>
 
 ![Java](https://img.shields.io/badge/Java-21-blue?logo=java)
 ![Spring Boot](https://img.shields.io/badge/SpringBoot-3.2.x-brightgreen?logo=spring)
